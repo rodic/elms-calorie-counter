@@ -9,12 +9,16 @@ import Html.Events exposing (..)
 
 
 type alias Model =
-    Int
+    { calories : Int
+    , increment : Int
+    }
 
 
 initModel : Model
 initModel =
-    0
+    { calories = 0
+    , increment = 0
+    }
 
 
 
@@ -24,16 +28,27 @@ initModel =
 type Msg
     = AddCalories
     | Clear
+    | UpdateIncrement String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddCalories ->
-            model + 1
+            { calories = model.calories + model.increment
+            , increment = 0
+            }
 
         Clear ->
             initModel
+
+        UpdateIncrement n ->
+            case String.toInt n of
+                Err msg ->
+                    model
+
+                Ok value ->
+                    { model | increment = value }
 
 
 
@@ -44,8 +59,14 @@ view : Model -> Html Msg
 view model =
     div []
         [ h3 []
-            [ text ("Total Calories: " ++ (toString model))
+            [ text ("Total Calories: " ++ (toString model.calories))
             ]
+        , input
+            [ type_ "text"
+            , onInput UpdateIncrement
+            ]
+            [ text (toString model.increment)]
+        , br [] []
         , button
             [ type_ "button"
             , onClick AddCalories

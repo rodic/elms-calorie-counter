@@ -8260,16 +8260,33 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _user$project$Main$initModel = 0;
+var _user$project$Main$initModel = {calories: 0, increment: 0};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'AddCalories') {
-			return model + 1;
-		} else {
-			return _user$project$Main$initModel;
+		switch (_p0.ctor) {
+			case 'AddCalories':
+				return {calories: model.calories + model.increment, increment: 0};
+			case 'Clear':
+				return _user$project$Main$initModel;
+			default:
+				var _p1 = _elm_lang$core$String$toInt(_p0._0);
+				if (_p1.ctor === 'Err') {
+					return model;
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{increment: _p1._0});
+				}
 		}
 	});
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {calories: a, increment: b};
+	});
+var _user$project$Main$UpdateIncrement = function (a) {
+	return {ctor: 'UpdateIncrement', _0: a};
+};
 var _user$project$Main$Clear = {ctor: 'Clear'};
 var _user$project$Main$AddCalories = {ctor: 'AddCalories'};
 var _user$project$Main$view = function (model) {
@@ -8287,7 +8304,7 @@ var _user$project$Main$view = function (model) {
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Total Calories: ',
-							_elm_lang$core$Basics$toString(model))),
+							_elm_lang$core$Basics$toString(model.calories))),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -8297,9 +8314,18 @@ var _user$project$Main$view = function (model) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$type_('text'),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$UpdateIncrement),
+							_1: {ctor: '[]'}
+						}
 					},
-					{ctor: '[]'}),
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(model.increment)),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
